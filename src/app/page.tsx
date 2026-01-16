@@ -179,10 +179,10 @@ export default function QuickSortStudio() {
       <header className="border-b border-slate-200 bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
+            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
               <Zap className="text-white w-5 h-5 fill-current" />
             </div>
-            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-indigo-600">Quick_Sort_Studio</h1>
+            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-emerald-600">クイックソート (Quick Sort)</h1>
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-400 font-bold tracking-widest">
@@ -206,7 +206,7 @@ export default function QuickSortStudio() {
 
           <div className="relative aspect-video lg:aspect-square max-h-[500px] bg-white rounded-[2.5rem] border border-slate-200 p-16 flex items-end justify-center gap-3 overflow-hidden shadow-xl">
             <div className="absolute top-8 left-10 flex items-center gap-2 mono text-[10px] text-slate-400 uppercase font-black tracking-widest scale-90">
-              <Target size={14} className="text-indigo-600" />
+              <Zap size={14} className="text-emerald-600" />
               クイックソート・シミュレーター
             </div>
 
@@ -220,12 +220,12 @@ export default function QuickSortStudio() {
 
                 if (inRange) {
                   colorClass = "bg-slate-100 opacity-100";
-                  if (isSelected) colorClass = "bg-indigo-400 shadow-[0_0_20px_rgba(129,140,248,0.4)]";
+                  if (isSelected) colorClass = "bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.4)]";
                   if (isPivot) colorClass = "bg-rose-500 shadow-[0_0_25px_rgba(244,63,94,0.4)] z-10 scale-105";
                 }
 
                 if (step.type === 'complete') {
-                  colorClass = "bg-indigo-600 shadow-[0_0_20px_rgba(79,70,229,0.3)] opacity-100";
+                  colorClass = "bg-emerald-600 shadow-[0_0_20px_rgba(5,150,105,0.3)] opacity-100";
                 }
 
                 return (
@@ -236,7 +236,7 @@ export default function QuickSortStudio() {
                     style={{ height: `${val}%` }}
                     className={`flex-1 min-w-[20px] rounded-t-xl relative ${colorClass} transition-all duration-300`}
                   >
-                    <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-black ${isSelected || isPivot ? 'text-indigo-600' : 'text-slate-400 opacity-50'}`}>
+                    <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-black ${isSelected || isPivot ? 'text-emerald-600' : 'text-slate-400 opacity-50'}`}>
                       {val}
                     </div>
                     {isPivot && step.type !== 'complete' && (
@@ -268,9 +268,9 @@ export default function QuickSortStudio() {
                 <button onClick={stepBackward} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400"><StepBack size={20} /></button>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-20 h-20 bg-indigo-600 text-white rounded-3xl flex items-center justify-center hover:bg-indigo-500 transition-all active:scale-90 shadow-2xl shadow-indigo-600/20"
+                  className="w-20 h-20 bg-emerald-600 text-white rounded-[2rem] flex items-center justify-center hover:bg-emerald-500 transition-all active:scale-95 shadow-xl shadow-emerald-600/20"
                 >
-                  {isPlaying ? <Pause fill="currentColor" size={28} /> : <Play fill="currentColor" size={28} className="ml-1" />}
+                  {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
                 </button>
                 <button onClick={stepForward} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400"><StepForward size={20} /></button>
                 <button onClick={reset} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
