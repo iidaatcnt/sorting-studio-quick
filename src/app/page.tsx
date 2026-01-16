@@ -174,26 +174,26 @@ export default function QuickSortStudio() {
   const step = steps[currentStep] || { array: [], indices: [], type: 'init', description: '' };
 
   return (
-    <div className="min-h-screen bg-[#06090f] text-slate-100 font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-indigo-500/30">
       {/* Header */}
-      <header className="border-b border-white/5 bg-[#0d1117]/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-slate-200 bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
-              <Zap className="text-slate-950 w-5 h-5 fill-current" />
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
+              <Zap className="text-white w-5 h-5 fill-current" />
             </div>
-            <h1 className="font-black italic tracking-tighter text-xl uppercase">Quick_Sort_Studio</h1>
+            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-indigo-600">Quick_Sort_Studio</h1>
           </div>
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-500 font-bold tracking-widest">
+            <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-400 font-bold tracking-widest">
               <div className="flex items-center gap-2">
-                <div className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-slate-700'}`} />
-                {isPlaying ? 'Computing' : 'Paused'}
+                <div className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-emerald-600 animate-pulse' : 'bg-slate-300'}`} />
+                {isPlaying ? '実行中' : '停止中'}
               </div>
               <span className="opacity-20">|</span>
               <span>Step: {currentStep} / {steps.length - 1}</span>
             </div>
-            <a href="https://github.com/iidaatcnt/sorting-studio-quick" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-white transition-colors">
+            <a href="https://github.com/iidaatcnt/sorting-studio-quick" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-slate-900 transition-colors">
               <Github size={20} />
             </a>
           </div>
@@ -204,10 +204,10 @@ export default function QuickSortStudio() {
         {/* Left: Visualization */}
         <div className="lg:col-span-8 flex flex-col gap-8">
 
-          <div className="relative aspect-video lg:aspect-square max-h-[500px] bg-[#0d1117] rounded-[2.5rem] border border-white/5 p-16 flex items-end justify-center gap-3 overflow-hidden shadow-2xl">
-            <div className="absolute top-8 left-10 flex items-center gap-2 mono text-[10px] text-slate-600 uppercase font-black tracking-widest scale-90">
-              <Target size={14} className="text-emerald-500" />
-              Divide & Conquer // Partitioning
+          <div className="relative aspect-video lg:aspect-square max-h-[500px] bg-white rounded-[2.5rem] border border-slate-200 p-16 flex items-end justify-center gap-3 overflow-hidden shadow-xl">
+            <div className="absolute top-8 left-10 flex items-center gap-2 mono text-[10px] text-slate-400 uppercase font-black tracking-widest scale-90">
+              <Target size={14} className="text-indigo-600" />
+              クイックソート・シミュレーター
             </div>
 
             <AnimatePresence mode="popLayout" initial={false}>
@@ -216,17 +216,16 @@ export default function QuickSortStudio() {
                 const isPivot = step.pivotIdx === idx;
                 const inRange = step.activeRange ? (idx >= step.activeRange[0] && idx <= step.activeRange[1]) : false;
 
-                let colorClass = "bg-slate-800/40 opacity-30";
-                let scale = 1;
+                let colorClass = "bg-slate-100 opacity-30";
 
                 if (inRange) {
-                  colorClass = "bg-slate-800 opacity-100";
-                  if (isSelected) colorClass = "bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.4)]";
-                  if (isPivot) colorClass = "bg-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.5)] z-10 scale-105";
+                  colorClass = "bg-slate-100 opacity-100";
+                  if (isSelected) colorClass = "bg-indigo-400 shadow-[0_0_20px_rgba(129,140,248,0.4)]";
+                  if (isPivot) colorClass = "bg-rose-500 shadow-[0_0_25px_rgba(244,63,94,0.4)] z-10 scale-105";
                 }
 
                 if (step.type === 'complete') {
-                  colorClass = "bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)] opacity-100";
+                  colorClass = "bg-indigo-600 shadow-[0_0_20px_rgba(79,70,229,0.3)] opacity-100";
                 }
 
                 return (
@@ -237,13 +236,13 @@ export default function QuickSortStudio() {
                     style={{ height: `${val}%` }}
                     className={`flex-1 min-w-[20px] rounded-t-xl relative ${colorClass} transition-all duration-300`}
                   >
-                    <div className={`absolute -top-8 left-1/2 -translate-x-1/2 mono text-[10px] font-black ${isSelected || isPivot ? 'text-white' : 'text-slate-600 opacity-50'}`}>
+                    <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-black ${isSelected || isPivot ? 'text-indigo-600' : 'text-slate-400 opacity-50'}`}>
                       {val}
                     </div>
                     {isPivot && step.type !== 'complete' && (
                       <div className="absolute inset-x-0 -bottom-8 flex flex-col items-center gap-1">
-                        <div className="text-[9px] font-black text-amber-400 uppercase tracking-tighter">Pivot</div>
-                        <div className="w-1 h-4 bg-amber-500/20 rounded-full" />
+                        <div className="text-[9px] font-black text-rose-500 uppercase tracking-tighter">Pivot</div>
+                        <div className="w-1 h-4 bg-rose-500/20 rounded-full" />
                       </div>
                     )}
                   </motion.div>
@@ -254,7 +253,7 @@ export default function QuickSortStudio() {
             {/* Range markers */}
             {step.activeRange && step.type !== 'complete' && (
               <div
-                className="absolute bottom-6 h-1 bg-white/5 rounded-full transition-all duration-500"
+                className="absolute bottom-6 h-1 bg-slate-100 rounded-full transition-all duration-500"
                 style={{
                   left: `${(step.activeRange[0] / ARRAY_SIZE) * 100}%`,
                   width: `${((step.activeRange[1] - step.activeRange[0] + 1) / ARRAY_SIZE) * 100}%`
@@ -263,34 +262,34 @@ export default function QuickSortStudio() {
             )}
           </div>
 
-          <div className="px-10 py-8 bg-[#0d1117]/80 rounded-[2rem] border border-white/10 flex flex-col gap-8 shadow-2xl backdrop-blur-xl">
+          <div className="px-10 py-8 bg-white rounded-[2rem] border border-slate-200 flex flex-col gap-8 shadow-lg">
             <div className="flex flex-col md:flex-row items-center gap-10">
               <div className="flex items-center gap-3">
-                <button onClick={stepBackward} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400"><StepBack size={20} /></button>
+                <button onClick={stepBackward} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400"><StepBack size={20} /></button>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-20 h-20 bg-emerald-500 text-slate-950 rounded-3xl flex items-center justify-center hover:bg-white transition-all active:scale-90 shadow-2xl shadow-emerald-500/20"
+                  className="w-20 h-20 bg-indigo-600 text-white rounded-3xl flex items-center justify-center hover:bg-indigo-500 transition-all active:scale-90 shadow-2xl shadow-indigo-600/20"
                 >
                   {isPlaying ? <Pause fill="currentColor" size={28} /> : <Play fill="currentColor" size={28} className="ml-1" />}
                 </button>
-                <button onClick={stepForward} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400"><StepForward size={20} /></button>
-                <button onClick={reset} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
+                <button onClick={stepForward} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400"><StepForward size={20} /></button>
+                <button onClick={reset} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
               </div>
 
               <div className="flex-1 w-full">
-                <div className="flex items-center justify-between mono text-[10px] text-slate-600 uppercase font-black tracking-[0.2em] mb-3">
+                <div className="flex items-center justify-between mono text-[10px] text-slate-400 uppercase font-black tracking-[0.2em] mb-3">
                   <span>Latency_Tuning</span>
-                  <span className="text-emerald-500">{Math.round((speed / 980) * 100)}%</span>
+                  <span className="text-indigo-600">{Math.round((speed / 980) * 100)}%</span>
                 </div>
-                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-emerald-500/10 h-1.5 rounded-full accent-emerald-500 cursor-pointer" />
+                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-slate-100 h-1.5 rounded-full accent-indigo-600 cursor-pointer" />
               </div>
             </div>
 
-            <div className="p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 flex gap-5 items-start">
-              <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
-                <Info size={16} className="text-emerald-400" />
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-5 items-start">
+              <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-full bg-white border border-slate-200 shrink-0 shadow-sm">
+                <Info size={16} className="text-slate-400" />
               </div>
-              <p className="text-sm text-slate-300 leading-relaxed font-medium">
+              <p className="text-sm text-slate-600 leading-relaxed font-medium">
                 {step.description}
               </p>
             </div>
@@ -299,45 +298,45 @@ export default function QuickSortStudio() {
 
         {/* Right: Code & Theory */}
         <div className="lg:col-span-4 flex flex-col gap-8">
-          <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2rem] shadow-2xl">
+          <div className="p-8 bg-white border border-slate-200 rounded-[2rem] shadow-lg">
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-emerald-500/10 rounded-xl"><Split className="text-emerald-400 w-5 h-5" /></div>
-              <h2 className="font-black text-xs uppercase tracking-[0.3em]">Algorithm_Dossier</h2>
+              <div className="p-2.5 bg-indigo-50 rounded-xl"><Split className="text-indigo-600 w-5 h-5" /></div>
+              <h2 className="font-black text-xs uppercase tracking-[0.3em] text-slate-400">学習ガイド</h2>
             </div>
-            <div className="p-6 bg-[#000]/40 rounded-2xl border border-white/5 mb-8">
-              <h3 className="text-emerald-400 font-black mb-3 text-sm uppercase italic">Quick Sort</h3>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 mb-8">
+              <h3 className="text-indigo-600 font-black mb-3 text-sm uppercase italic">Quick Sort</h3>
+              <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
                 枢軸（ピボット）を基準に、全要素を「小さいグループ」と「大きいグループ」に分割。これを再帰的に繰り返すことで、極めて高速に整列を完了させます。
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4 mono text-[10px] font-black">
-              <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-emerald-500/30 transition-colors">
-                <div className="text-slate-600 mb-1 uppercase tracking-tighter italic">Avg_Speed</div>
-                <div className="text-white text-sm">O(N log N)</div>
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group transition-colors">
+                <div className="text-slate-400 mb-1 uppercase tracking-tighter italic">Avg_Speed</div>
+                <div className="text-indigo-600 text-sm font-black">O(N log N)</div>
               </div>
-              <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-emerald-500/30 transition-colors">
-                <div className="text-slate-600 mb-1 uppercase tracking-tighter italic">Method</div>
-                <div className="text-white text-sm">Recursive</div>
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group transition-colors">
+                <div className="text-slate-400 mb-1 uppercase tracking-tighter italic">Method</div>
+                <div className="text-indigo-600 text-sm font-black">Recursive</div>
               </div>
             </div>
           </div>
 
-          <div className="p-8 bg-[#000] border border-white/5 rounded-[2rem] flex-1 flex flex-col min-h-[450px] shadow-2xl">
+          <div className="p-8 bg-[#0f172a] border border-slate-800 rounded-[2rem] flex-1 flex flex-col min-h-[450px] shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <Code2 className="text-slate-600 w-5 h-5" />
-                <h2 className="font-black text-[10px] uppercase tracking-[0.3em]">Exec_Console</h2>
+                <Code2 className="text-slate-400 w-5 h-5" />
+                <h2 className="font-black text-[10px] uppercase tracking-[0.3em] text-slate-500">Python 実装例</h2>
               </div>
-              <div className="px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                <span className="text-[9px] font-black text-emerald-500 uppercase">Python 3</span>
+              <div className="px-3 py-1 bg-indigo-500/10 rounded-full border border-indigo-500/20">
+                <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Python 3</span>
               </div>
             </div>
 
-            <div className="flex-1 bg-zinc-950/30 p-8 rounded-2xl mono text-[10px] leading-[1.8] overflow-auto border border-white/5 custom-scrollbar">
+            <div className="flex-1 bg-black/20 p-8 rounded-2xl mono text-[10px] leading-[1.8] overflow-auto border border-slate-800 scrollbar-hide text-slate-300">
               {CODE_PYTHON.map((line, i) => (
                 <div
                   key={i}
-                  className={`flex gap-6 transition-all duration-300 ${step.codeLine === i ? 'text-emerald-400 bg-emerald-400/10 -mx-8 px-8 border-l-2 border-emerald-400 font-bold' : 'text-slate-700'}`}
+                  className={`flex gap-6 transition-all duration-300 ${step.codeLine === i ? 'text-indigo-400 bg-indigo-500/10 -mx-8 px-8 border-l-2 border-indigo-400 font-bold' : 'text-slate-700'}`}
                 >
                   <span className="text-slate-800 tabular-nums w-4 select-none opacity-50">{i + 1}</span>
                   <pre className="whitespace-pre">{line}</pre>
@@ -345,21 +344,21 @@ export default function QuickSortStudio() {
               ))}
             </div>
             <div className="mt-8 flex items-center justify-between opacity-50">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full bg-slate-800" />
-                <div className="w-2 h-2 rounded-full bg-slate-800" />
-                <div className="w-2 h-2 rounded-full bg-slate-800" />
+              <div className="flex gap-1 text-slate-800">
+                <div className="w-2 h-2 rounded-full bg-current" />
+                <div className="w-2 h-2 rounded-full bg-current" />
+                <div className="w-2 h-2 rounded-full bg-current" />
               </div>
-              <span className="text-[10px] mono text-slate-700 uppercase tracking-widest">quickSort_kernel_v1</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Quick Sort // Core logic</span>
             </div>
           </div>
         </div>
       </main>
 
-      <footer className="mt-20 border-t border-white/5 py-16 text-center opacity-30">
+      <footer className="mt-20 border-t border-slate-200 py-16 text-center">
         <div className="flex flex-col items-center gap-6">
-          <Zap className="text-slate-800 w-8 h-8" />
-          <p className="text-[10px] mono text-slate-800 uppercase tracking-[0.8em]">Interactive_Learning_Series // Informatics_I</p>
+          <Zap className="text-slate-200 w-8 h-8" />
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Fundamental Wisdom for the AI Era // Algorithm Literacy // しろいプログラミング教室</p>
         </div>
       </footer>
     </div>
