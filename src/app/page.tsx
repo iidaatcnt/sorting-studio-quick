@@ -14,7 +14,10 @@ import {
   Zap,
   Lightbulb,
   Target,
-  Split
+  Split,
+  Upload,
+  Share2,
+  Shuffle
 } from 'lucide-react';
 
 // --- Types ---
@@ -31,7 +34,7 @@ interface SortingStep {
 }
 
 // --- Constants ---
-const ARRAY_SIZE = 12; // A bit more for quick sort
+const ARRAY_SIZE = 10;
 const INITIAL_SPEED = 700;
 
 const CODE_PYTHON = [
@@ -111,7 +114,7 @@ const generateSteps = (initialArray: number[]): SortingStep[] => {
     array: [...arr],
     indices: [],
     type: 'init',
-    description: 'クイックソート（分割統治法）を開始します。高速な並び替えを実現します。',
+    description: '配列の準備ができました。クイックソートを開始します。',
     codeLine: 0
   });
 
@@ -128,6 +131,18 @@ const generateSteps = (initialArray: number[]): SortingStep[] => {
   return steps;
 };
 
+// --- Helper: Parse data input ---
+const parseDataInput = (input: string): number[] | null => {
+  const nums = input
+    .split(/[,\s]+/)
+    .map(s => s.trim())
+    .filter(s => s !== '')
+    .map(s => parseInt(s, 10))
+    .filter(n => !isNaN(n) && n >= 1 && n <= 99);
+
+  if (nums.length !== ARRAY_SIZE) return null;
+  return nums;
+};
 
 // --- Main App ---
 export default function QuickSortStudio() {
@@ -136,20 +151,86 @@ export default function QuickSortStudio() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(INITIAL_SPEED);
+  const [dataInput, setDataInput] = useState('');
+  const [inputError, setInputError] = useState('');
+  const [showDataPanel, setShowDataPanel] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const reset = useCallback(() => {
-    const newArray = Array.from({ length: ARRAY_SIZE }, () => Math.floor(Math.random() * 80) + 15);
+  // Initialize from URL parameter or random
+  const initializeArray = useCallback((customArray?: number[]) => {
+    const newArray = customArray || Array.from({ length: ARRAY_SIZE }, () => Math.floor(Math.random() * 80) + 15);
     const newSteps = generateSteps(newArray);
     setArray(newArray);
     setSteps(newSteps);
     setCurrentStep(0);
     setIsPlaying(false);
+    setDataInput(newArray.join(', '));
+    setInputError('');
   }, []);
 
+  // Check URL for data parameter on mount
   useEffect(() => {
-    reset();
-  }, [reset]);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      if (dataParam) {
+        const parsed = parseDataInput(dataParam);
+        if (parsed) {
+          initializeArray(parsed);
+          setShowDataPanel(false);
+          return;
+        }
+      }
+    }
+    initializeArray();
+  }, [initializeArray]);
+
+  // Generate random array
+  const generateRandom = useCallback(() => {
+    initializeArray();
+  }, [initializeArray]);
+
+  // Apply custom data input
+  const applyDataInput = useCallback(() => {
+    const parsed = parseDataInput(dataInput);
+    if (!parsed) {
+      setInputError(`${ARRAY_SIZE}個の数値（1〜99）をカンマ区切りで入力してください`);
+      return;
+    }
+    initializeArray(parsed);
+    setShowDataPanel(false);
+  }, [dataInput, initializeArray]);
+
+  // Handle file upload
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const parsed = parseDataInput(text);
+      if (parsed) {
+        initializeArray(parsed);
+        setShowDataPanel(false);
+      } else {
+        setInputError(`ファイルには${ARRAY_SIZE}個の数値（1〜99）が必要です`);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }, [initializeArray]);
+
+  // Copy share URL to clipboard
+  const copyShareUrl = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('data', array.join(','));
+      navigator.clipboard.writeText(url.toString());
+      alert('共有URLをコピーしました！\n他のソートアルゴリズムのURLに ?data=' + array.join(',') + ' を追加すると同じデータで比較できます。');
+    }
+  }, [array]);
 
   const stepForward = useCallback(() => setCurrentStep(prev => Math.min(prev + 1, steps.length - 1)), [steps.length]);
   const stepBackward = useCallback(() => setCurrentStep(prev => Math.max(prev - 1, 0)), []);
@@ -203,6 +284,35 @@ export default function QuickSortStudio() {
       <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Left: Visualization */}
         <div className="lg:col-span-8 flex flex-col gap-8">
+
+          {/* Data Input Panel */}
+          {showDataPanel && (
+            <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <Upload className="text-emerald-600 w-5 h-5" />
+                <h2 className="font-bold text-sm text-slate-700">データ入力（{ARRAY_SIZE}個の数値）</h2>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <input
+                    type="text"
+                    value={dataInput}
+                    onChange={(e) => { setDataInput(e.target.value); setInputError(''); }}
+                    placeholder="例: 25, 41, 48, 50, 54, 61, 70, 76, 84, 92"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                  {inputError && <p className="text-red-500 text-xs mt-2">{inputError}</p>}
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <button onClick={applyDataInput} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-500 transition-colors">適用</button>
+                  <button onClick={generateRandom} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors flex items-center gap-2"><Shuffle size={16} />ランダム生成</button>
+                  <input ref={fileInputRef} type="file" accept=".txt,.csv" onChange={handleFileUpload} className="hidden" />
+                  <button onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors flex items-center gap-2"><Upload size={16} />ファイル読込</button>
+                </div>
+                <p className="text-xs text-slate-400">💡 同じデータで他のソートと比較するには、URLに <code className="bg-slate-100 px-1 rounded">?data=25,41,48...</code> を追加してください</p>
+              </div>
+            </div>
+          )}
 
           <div className="relative aspect-video lg:aspect-square max-h-[500px] bg-white rounded-[2.5rem] border border-slate-200 p-16 flex items-end justify-center gap-3 overflow-hidden shadow-xl">
             <div className="absolute top-8 left-10 flex items-center gap-2 mono text-[10px] text-slate-400 uppercase font-black tracking-widest scale-90">
@@ -273,7 +383,8 @@ export default function QuickSortStudio() {
                   {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
                 </button>
                 <button onClick={stepForward} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400"><StepForward size={20} /></button>
-                <button onClick={reset} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
+                <button onClick={() => setShowDataPanel(!showDataPanel)} className="w-12 h-12 flex items-center justify-center bg-slate-100 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400 ml-4" title="データ入力パネル"><RotateCcw size={20} /></button>
+                <button onClick={copyShareUrl} className="w-12 h-12 flex items-center justify-center bg-emerald-100 rounded-2xl hover:bg-emerald-200 transition-colors text-emerald-600 ml-2" title="共有URLをコピー"><Share2 size={20} /></button>
               </div>
 
               <div className="flex-1 w-full">
